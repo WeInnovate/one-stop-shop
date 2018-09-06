@@ -17,7 +17,11 @@ public class DbUtil {
 			String jdbcUrl = rb.getString("url");
 			String jdbcUserName = rb.getString("userName");
 			String jdbcPassword = rb.getString("password");
-			
+			try {
+				Class.forName("org.h2.Driver");
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 			con = DriverManager.getConnection(jdbcUrl, jdbcUserName, jdbcPassword);
 		}
 		return con;
