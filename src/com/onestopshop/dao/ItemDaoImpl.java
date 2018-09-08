@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.onestopshop.dao.util.DbUtil;
@@ -15,6 +16,8 @@ public class ItemDaoImpl implements ItemDao {
 	private String createItemTableQuery = "CREATE TABLE OSS_ITEM (ID BIGINT PRIMARY KEY, NAME VARCHAR, DESCRIPTION VARCHAR, QUANTITY NUMBER, PRICE DECIMAL)";
 	private String getItemQuery = "SELECT * FROM OSS_ITEM WHERE ID = ?";
 	private String saveItemQuery = "INSERT INTO OSS_ITEM VALUES(?, ?, ?, ?, ?)";
+	private String getItemsQuery = "SELECT * FROM OSS_ITEM";
+	private String deleteItem = "DELETE FROM OSS_ITEM WHERE ID = ?";
 
 	Connection con;
 
@@ -39,7 +42,23 @@ public class ItemDaoImpl implements ItemDao {
 
 	@Override
 	public List<Item> getItems() {
-		return null;
+		List<Item> items = new ArrayList<>();
+
+		try (Connection con = DbUtil.getConnection(); Statement stmt = con.createStatement()) {
+			ResultSet rs = stmt.executeQuery(getItemsQuery);
+			while (rs.next()) {
+				Item item = new Item();
+				item.setId(rs.getLong(1));
+				item.setName(rs.getString(2));
+				item.setDescription(rs.getString(3));
+				item.setQuantity(rs.getInt(4));
+				item.setPrice(rs.getDouble(5));
+				items.add(item);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return items;
 	}
 
 	@Override
@@ -64,7 +83,14 @@ public class ItemDaoImpl implements ItemDao {
 
 	@Override
 	public int deleteItem(long id) {
-		return 0;
+		int retVal = 0;
+		try (Connection con = DbUtil.getConnection(); PreparedStatement pstmt = con.prepareStatement(deleteItem)) {
+			pstmt.setLong(1, id);
+			retVal = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return retVal;
 	}
 
 	@Override

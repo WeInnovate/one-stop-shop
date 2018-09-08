@@ -10,6 +10,7 @@
 <h1>Item</h1>
 <ul>
 <li><a href="save-item.jsp">Save Item Form</a></li>
+<li><a href="items">All Items</a></li>
 </ul>
 </body>
 </html>
