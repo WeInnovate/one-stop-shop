@@ -18,6 +18,7 @@ public class ItemDaoImpl implements ItemDao {
 	private String saveItemQuery = "INSERT INTO OSS_ITEM VALUES(?, ?, ?, ?, ?)";
 	private String getItemsQuery = "SELECT * FROM OSS_ITEM";
 	private String deleteItem = "DELETE FROM OSS_ITEM WHERE ID = ?";
+	private String updateItem = "UPDATE OSS_ITEM SET NAME = ?, DESCRIPTION = ?, QUANTITY = ?, PRICE = ? WHERE ID = ?";
 
 	Connection con;
 
@@ -78,6 +79,16 @@ public class ItemDaoImpl implements ItemDao {
 
 	@Override
 	public int updateItem(Item item) {
+		try (Connection con = DbUtil.getConnection(); PreparedStatement pstmt = con.prepareStatement(updateItem)) {
+			pstmt.setString(1, item.getName());
+			pstmt.setString(2, item.getDescription());
+			pstmt.setInt(3, item.getQuantity());
+			pstmt.setDouble(4, item.getPrice());
+			pstmt.setLong(5, item.getId());
+			return pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return 0;
 	}
 

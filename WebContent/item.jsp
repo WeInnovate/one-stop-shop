@@ -26,19 +26,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="item" items="${requestScope.items}">
-					<tr>
-						<th scope="row">${item.id}</th>
-						<td>${item.name}</td>
-						<td>${item.description}</td>
-						<td>${item.quantity}</td>
-						<td>${item.price}</td>
-						<td>
-						<a href="${pageContext.request.contextPath}/items/view/?id=${item.id}" type="button" class="btn btn-info">View</a> |
-						<a href="${pageContext.request.contextPath}/items/delete/?id=${item.id}" type="button" class="btn btn-danger">Delete</a>
-						</td>
-					</tr>
-				</c:forEach>
+				<tr>
+					<th scope="row">${item.id}</th>
+					<td>${item.name}</td>
+					<td>${item.description}</td>
+					<td>${item.quantity}</td>
+					<td>${item.price}</td>
+					<td><a href="${pageContext.request.contextPath}/items/edit?id=${item.id}" type="button"
+						class="btn btn-info">Edit</a> </td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

@@ -28,24 +28,47 @@ public class ItemServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		String requestedUri = request.getRequestURI();
-		if(requestedUri.contains("delete")) {
+
+		if (requestedUri.contains("delete")) {
 			String id = request.getParameter("id");
 			itemService.deleteItem(Long.valueOf(id));
+			List<Item> itemsFromDb = itemService.getItems();
+			RequestDispatcher rd = request.getRequestDispatcher("/items.jsp");
+			request.setAttribute("items", itemsFromDb);
+			rd.forward(request, response);
+		} else if (requestedUri.contains("view")) {
+			String id = request.getParameter("id");
+			Item itemFromDb = itemService.getItem(Long.valueOf(id));
+			RequestDispatcher rd = request.getRequestDispatcher("/item.jsp");
+			request.setAttribute("item", itemFromDb);
+			rd.forward(request, response);
+		} else if (requestedUri.contains("edit")) {
+			String id = request.getParameter("id");
+			Item itemFromDb = itemService.getItem(Long.valueOf(id));
+			RequestDispatcher rd = request.getRequestDispatcher("/save-item.jsp");
+			request.setAttribute("item", itemFromDb);
+			rd.forward(request, response);
+		} else {
+			List<Item> itemsFromDb = itemService.getItems();
+			RequestDispatcher rd = request.getRequestDispatcher("/items.jsp");
+			request.setAttribute("items", itemsFromDb);
+			rd.forward(request, response);
 		}
-		
-		List<Item> itemsFromDb = itemService.getItems();
-		RequestDispatcher rd = request.getRequestDispatcher("/items.jsp");
-		request.setAttribute("items", itemsFromDb);
-		rd.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		Item item = (Item) request.getAttribute("item");
-		item.setId(getItemId());
-		itemService.saveItem(item);
-		response.sendRedirect("items");
+		if (item.getId() > 0) {
+			itemService.updateItem(item);
+			response.sendRedirect("items");
+		} else {
+			item.setId(getItemId());
+			itemService.saveItem(item);
+			response.sendRedirect("items");
+		}
 	}
 
 }
