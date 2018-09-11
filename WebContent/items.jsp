@@ -42,6 +42,12 @@
 			</tbody>
 		</table>
 	</div>
+	
+	<div class="container">
+		<c:forEach var="item" items="${requestScope.items}">
+<img src='${pageContext.request.contextPath}/assets/images/${item.id}.jpg' width="200px" height="300px" alt="Image" class="img-thumbnail">
+		</c:forEach>
+		</div>
 
 
 </body>
